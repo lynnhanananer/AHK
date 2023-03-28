@@ -4,8 +4,11 @@ SetWorkingDir, %A_ScriptDir%
 #Persistent
 
 CoordMode, Mouse, Screen
-InZone := False
-switching := True
+InZone := False ; is true when the mouse is in the defined switching area
+switching := True ; is true when the switching is enabled
+overtime := False ; is true when the script is running outside of normal work hours
+timeOverride := False ; is true when switching is enabled outside of normal work hours
+switchSideLeft := False ; is true when the switching direction is set to left
 
 Menu, Tray, Icon, DisplaySwitchRight.ico
 
@@ -19,8 +22,6 @@ Menu, Tray, Standard
 If (A_IsCompiled) {
     Menu, Tray, Tip, Display Edge Switcher
 }
-
-switchSideLeft := false
 
 Goto DeviceSwitchingLoop
 
@@ -38,7 +39,7 @@ DeviceSwitchingLoop:
             xPosSwitch := A_ScreenWidth - 1
         }
 
-        If (hour > 7 and hour < 18 and dayOfWeek > 1 and dayOfWeek < 7) {
+        If (timeOverride || (hour > 7 and hour < 18 and dayOfWeek > 1 and dayOfWeek < 7)) {
             sleepDelay := 50
             If (!InZone and xPos = xPosSwitch and yPos > 600 and yPos < 1050) {
                 Run, "switch_to_2.vbs", C:\Program Files\InputSwitcher\
@@ -49,8 +50,11 @@ DeviceSwitchingLoop:
             }
         }
         Else {
-            sleepDelay := 600000
-            Gosub, DisableSwitching
+            overtime := True
+            If (!timeOverride) {
+                Gosub, DisableSwitching
+                sleepDelay := 600000
+            }
         }
         Sleep sleepDelay
     }
@@ -85,14 +89,17 @@ ChangeSwitching:
         }
         Else {
             switching := !switching
-            Menu, Tray, Rename, Disable Device Switching, Device Switching Left
+            Menu, Tray, Rename, Disable Device Switching, Enable Device Switching
             Menu, Tray, Icon, DeviceSwitchingDisabled.ico
         }
     }
     Else {
         switching := !switching
         switchSideLeft := True
+        If (overtime) {
+            timeOverride := True
+        }
         Menu, Tray, Icon, DisplaySwitchLeft.ico
-        Menu, Tray, Rename, Device Switching Left, Device Switching Right
+        Menu, Tray, Rename, Enable Device Switching, Device Switching Right
         Goto DeviceSwitchingLoop
     }
