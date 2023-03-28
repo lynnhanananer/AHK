@@ -9,6 +9,7 @@ switching := True ; is true when the switching is enabled
 overtime := False ; is true when the script is running outside of normal work hours
 timeOverride := False ; is true when switching is enabled outside of normal work hours
 switchSideLeft := False ; is true when the switching direction is set to left
+sleepDelay := 50 ; the number of miliseconds the thread will sleep between each loop iteration for mouse position detection
 
 Menu, Tray, Icon, DisplaySwitchRight.ico
 
@@ -30,7 +31,6 @@ DeviceSwitchingLoop:
         MouseGetPos, xPos, yPos
         dayOfWeek := A_WDay
         hour := A_Hour
-        sleepDelay := 0
 
         If (switchSideLeft) {
             xPosSwitch = 0
@@ -39,8 +39,8 @@ DeviceSwitchingLoop:
             xPosSwitch := A_ScreenWidth - 1
         }
 
+        ; automatically disables device switching when the hour is not between 8 am and 5 pm, or disables when it is a weekend
         If (timeOverride || (hour > 7 and hour < 18 and dayOfWeek > 1 and dayOfWeek < 7)) {
-            sleepDelay := 50
             If (!InZone and xPos = xPosSwitch and yPos > 600 and yPos < 1050) {
                 Run, "switch_to_2.vbs", C:\Program Files\InputSwitcher\
                 InZone := True
@@ -53,7 +53,7 @@ DeviceSwitchingLoop:
             overtime := True
             If (!timeOverride) {
                 Gosub, DisableSwitching
-                sleepDelay := 600000
+                sleepDelay := 600000 ; sleep delay of 1 minute added to reduce script cpu usage outside of working hours
             }
         }
         Sleep sleepDelay
@@ -65,6 +65,7 @@ DisableSwitching:
         switching := !switching
         Menu, Tray, Rename, Disable Device Switching, Enable Device Switching
         Menu, Tray, Icon, DeviceSwitchingDisabled.ico
+        sleepDelay := 600000
     }
     Else {
         switching := !switching
@@ -91,6 +92,7 @@ ChangeSwitching:
             switching := !switching
             Menu, Tray, Rename, Disable Device Switching, Enable Device Switching
             Menu, Tray, Icon, DeviceSwitchingDisabled.ico
+            sleepDelay := 600000
         }
     }
     Else {
@@ -101,5 +103,6 @@ ChangeSwitching:
         }
         Menu, Tray, Icon, DisplaySwitchLeft.ico
         Menu, Tray, Rename, Enable Device Switching, Device Switching Right
+        sleepDelay := 50
         Goto DeviceSwitchingLoop
     }
