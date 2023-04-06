@@ -11,12 +11,15 @@ timeOverride := False ; is true when switching is enabled outside of normal work
 switchSideLeft := False ; is true when the switching direction is set to left
 sleepDelay := 50 ; the number of miliseconds the thread will sleep between each loop iteration for mouse position detection
 
-; instals the neccesary icons to the local directory when the exe is first run
-FileInstall, icons\DeviceSwitchingDisabled.ico, installtest\DeviceSwitchingDisabled.ico, 1
-FileInstall, icons\DisplaySwitchLeft.ico, installtest\DisplaySwitchLeft.ico, 1
-FileInstall, icons\DisplaySwitchRight.ico, installtest\DisplaySwitchRight.ico, 1
+; instals the neccesary icons to the icons directory when the exe is first run
+if !FileExist("\icons") {
+    FileCreateDir, icons
+}
+FileInstall, icons\DeviceSwitchingDisabled.ico, icons\DeviceSwitchingDisabled.ico, 1
+FileInstall, icons\DisplaySwitchLeft.ico, icons\DisplaySwitchLeft.ico, 1
+FileInstall, icons\DisplaySwitchRight.ico, icons\DisplaySwitchRight.ico, 1
 
-; validate that the tray icons are present in the script's directory
+; validate that the tray icons are present in the icons directory
 iconList := ["icons\DeviceSwitchingDisabled.ico", "icons\DisplaySwitchLeft.ico", "icons\DisplaySwitchRight.ico"]
 allFilesExist := true
 
@@ -29,7 +32,7 @@ Loop % iconList.Length() {
 }
 
 if !allFilesExist {
-    MsgBox The tray icons cannot be found in the local directory. The script will now close.
+    MsgBox The tray icons cannot be found in the icons directory. The script will now close.
     ExitApp
 }
 
