@@ -10,7 +10,7 @@ Menu, Tray, NoStandard
 
 Menu, Tray, Add, Hotkey Settings, HotkeyConfigGui
 Menu, Tray, Default, Hotkey Settings
-Menu, Tray, Tip, Genshin Auto-Pickup Tool
+Menu, Tray, Tip, Genshin Pickup Tool
 
 Menu, Tray, Add
 Menu, Tray, Standard
