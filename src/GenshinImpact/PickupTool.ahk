@@ -5,7 +5,18 @@ SetWorkingDir, %A_ScriptDir%
 
 toggle := false
 
-Menu, Tray, Icon, Ficon.ico
+; installs the neccesary icon for the script when the exe is first run
+if !FileExist("\resources") {
+    FileCreateDir, resources
+}
+FileInstall, resources\Ficon.ico, resources\Ficon.ico, 1
+
+; validate that the tray icon is present in the resources directory
+if !FileExist("resources\Ficon.ico") {
+    MsgBox The tray icon cannot be found in the resources directory. The script will now close.
+}
+
+Menu, Tray, Icon, resources\Ficon.ico
 Menu, Tray, NoStandard
 
 Menu, Tray, Add, Hotkey Settings, HotkeyConfigGui
@@ -26,27 +37,27 @@ If (not(A_IsAdmin)) {
 }
 Else {
     ; checks to see if the ini file exists, if it does not, it creates one
-    If InStr(FileExist("hotkeyconfig.ini"), "A") {
+    If InStr(FileExist("resources\hotkeyconfig.ini"), "A") {
         ; if the ini file exists, read the values and start the hotkeys
-        IniRead, pickupKey, hotkeyconfig.ini, hotkeys, pickupKey
-        IniRead, toggleHotkey, hotkeyconfig.ini, hotkeys, ToggleHotkey
-        IniRead, pressHotkey, hotkeyconfig.ini, hotkeys, PressHotkey
-        IniRead, pressFreq, hotkeyconfig.ini, hotkeys, PressFreq
+        IniRead, pickupKey, resources\hotkeyconfig.ini, hotkeys, pickupKey
+        IniRead, toggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
+        IniRead, pressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
+        IniRead, pressFreq, resources\hotkeyconfig.ini, hotkeys, PressFreq
         Hotkey, IfWinACtive, ahk_exe GenshinImpact.exe
         Hotkey, %toggleHotkey%, PickupToggle
         Hotkey, %pressHotkey%, PickupPress
     }
     Else {
-        ; if the ini files does not exist, write the default values and open the gui
+        ; if the ini file does not exist, write the default values and open the gui
         TrayTip,, Creating .ini file to store hotkey configurations.
-        IniWrite, f, hotkeyconfig.ini, hotkeys, PickupKey
-        IniWrite, LControl, hotkeyconfig.ini, hotkeys, ToggleHotkey
-        IniWrite, f, hotkeyconfig.ini, hotkeys, PressHotkey
-        IniWrite, 5, hotkeyconfig.ini, hotkeys, PressFreq
-        IniRead, pickupKey, hotkeyconfig.ini, hotkeys, PickupKey
-        IniRead, toggleHotkey, hotkeyconfig.ini, hotkeys, ToggleHotkey
-        IniRead, pressHotkey, hotkeyconfig.ini, hotkeys, PressHotkey
-        IniRead, pressFreq, hotkeyconfig.ini, hotkeys, PressFreq
+        IniWrite, f, resources\hotkeyconfig.ini, hotkeys, PickupKey
+        IniWrite, LControl, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
+        IniWrite, f, resources\hotkeyconfig.ini, hotkeys, PressHotkey
+        IniWrite, 5, resources\hotkeyconfig.ini, hotkeys, PressFreq
+        IniRead, pickupKey, resources\hotkeyconfig.ini, hotkeys, PickupKey
+        IniRead, toggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
+        IniRead, pressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
+        IniRead, pressFreq, resources\hotkeyconfig.ini, hotkeys, PressFreq
         gosub HotkeyConfigGui
     }
 }
@@ -164,41 +175,41 @@ SubmitClose:
 
     gosub DisableHotkeys
 
-    IniWrite, %PickupKey%, hotkeyconfig.ini, hotkeys, PickupKey
+    IniWrite, %PickupKey%, resources\hotkeyconfig.ini, hotkeys, PickupKey
 
     If (ToggleHotkey = "") {
         If (AltToggleHotkey != "") {
-            IniWrite, %AltToggleHotkey%, hotkeyconfig.ini, hotkeys, ToggleHotkey
+            IniWrite, %AltToggleHotkey%, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
         }
         Else {
             MsgBox, Error: Could not get Toggle Hotkey, assigning as default.
-            IniWrite, LControl, hotkeyconfig.ini, hotkeys, ToggleHotkey
+            IniWrite, LControl, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
         }
     }
     Else {
-        IniWrite, %ToggleHotkey%, hotkeyconfig.ini, hotkeys, ToggleHotkey
+        IniWrite, %ToggleHotkey%, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
     }
 
     If (PressHotkey = "") {
         If (AltPressHotkey != "") {
-            IniWrite, %AltPressHotkey%, hotkeyconfig.ini, hotkeys, PressHotkey
+            IniWrite, %AltPressHotkey%, resources\hotkeyconfig.ini, hotkeys, PressHotkey
         }
         Else {
             MsgBox, Error: Could not get Press Hotkey, assigning as default.
-            IniWrite, LControl, hotkeyconfig.ini, hotkeys, PressHotkey
+            IniWrite, LControl, resources\hotkeyconfig.ini, hotkeys, PressHotkey
         }
     }
     Else {
-        IniWrite, %PressHotkey%, hotkeyconfig.ini, hotkeys, PressHotkey
+        IniWrite, %PressHotkey%, resources\hotkeyconfig.ini, hotkeys, PressHotkey
     }
 
-    IniWrite, %PressFreq%, hotkeyconfig.ini, hotkeys, PressFreq
+    IniWrite, %PressFreq%, resources\hotkeyconfig.ini, hotkeys, PressFreq
     
 
-    IniRead, pickupKey, hotkeyconfig.ini, hotkeys, PickupKey
-    IniRead, toggleHotkey, hotkeyconfig.ini, hotkeys, ToggleHotkey
-    IniRead, pressHotkey, hotkeyconfig.ini, hotkeys, PressHotkey
-    IniRead, pressFreq, hotkeyconfig.ini, hotkeys, PressFreq
+    IniRead, pickupKey, resources\hotkeyconfig.ini, hotkeys, PickupKey
+    IniRead, toggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
+    IniRead, pressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
+    IniRead, pressFreq, resources\hotkeyconfig.ini, hotkeys, PressFreq
 
     gosub EnableHotkeys
 Return
@@ -218,16 +229,16 @@ ToolTipOff:
 Return
 
 DisableHotkeys:
-    IniRead, tempToggleHotkey, hotkeyconfig.ini, hotkeys, ToggleHotkey
-    IniRead, tempPressHotkey, hotkeyconfig.ini, hotkeys, Pres || A_TimeSinceThisHotkey = 0sHotkey
+    IniRead, tempToggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
+    IniRead, tempPressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
     Hotkey, IfWinACtive, ahk_exe GenshinImpact.exe
     Hotkey, %tempToggleHotkey%, PickupToggle, off
     Hotkey, %tempPressHotkey%, PickupPress, off
 Return
 
 EnableHotkeys:
-    IniRead, tempToggleHotkey, hotkeyconfig.ini, hotkeys, ToggleHotkey
-    IniRead, tempPressHotkey, hotkeyconfig.ini, hotkeys, PressHotkey
+    IniRead, tempToggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
+    IniRead, tempPressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
     Hotkey, IfWinACtive, ahk_exe GenshinImpact.exe
     Hotkey, %tempToggleHotkey%, PickupToggle, on
     Hotkey, %tempPressHotkey%, PickupPress, on

@@ -11,7 +11,33 @@ timeOverride := False ; is true when switching is enabled outside of normal work
 switchSideLeft := False ; is true when the switching direction is set to left
 sleepDelay := 50 ; the number of miliseconds the thread will sleep between each loop iteration for mouse position detection
 
-Menu, Tray, Icon, DisplaySwitchRight.ico
+; instals the neccesary icons to the resources directory when the exe is first run
+if !FileExist("\resources") {
+    FileCreateDir, resources
+}
+FileInstall, resources\DeviceSwitchingDisabled.ico, resources\DeviceSwitchingDisabled.ico, 1
+FileInstall, resources\DisplaySwitchLeft.ico, resources\DisplaySwitchLeft.ico, 1
+FileInstall, resources\DisplaySwitchRight.ico, resources\DisplaySwitchRight.ico, 1
+
+; validate that the tray icons are present in the resources directory
+iconList := ["resources\DeviceSwitchingDisabled.ico", "resources\DisplaySwitchLeft.ico", "resources\DisplaySwitchRight.ico"]
+allFilesExist := true
+
+Loop % iconList.Length() {
+    fileName := iconList[A_Index]
+    if !FileExist(fileName) {
+        allFilesExist := false
+        break
+    }
+}
+
+if !allFilesExist {
+    MsgBox The tray icons cannot be found in the resources directory. The script will now close.
+    ExitApp
+}
+
+; set up the tray
+Menu, Tray, Icon, resources\DisplaySwitchRight.ico
 
 Menu, Tray, NoStandard
 Menu, Tray, Add, Disable Device Switching, ChangeSwitching
@@ -64,17 +90,17 @@ DisableSwitching:
     If (switching) {
         switching := !switching
         Menu, Tray, Rename, Disable Device Switching, Enable Device Switching
-        Menu, Tray, Icon, DeviceSwitchingDisabled.ico
+        Menu, Tray, Icon, resources\DeviceSwitchingDisabled.ico
         sleepDelay := 600000
     }
     Else {
         switching := !switching
         Menu, Tray, Rename, Enable Device Switching, Disable Device Switching
         If (switchSideLeft) {
-            Menu, Tray, Icon, DisplaySwitchLeft.ico
+            Menu, Tray, Icon, resources\DisplaySwitchLeft.ico
         }
         Else {
-            Menu, Tray, Icon, DisplaySwitchRight.ico
+            Menu, Tray, Icon, resources\DisplaySwitchRight.ico
         }
         Goto DeviceSwitchingLoop
     }
@@ -85,13 +111,13 @@ ChangeSwitching:
     If (switching) {
         If (switchSideLeft) {
             switchSideLeft := !switchSideLeft
-            Menu, Tray, Icon, DisplaySwitchRight.ico
+            Menu, Tray, Icon, resources\DisplaySwitchRight.ico
             Menu, Tray, Rename, Device Switching Right, Disable Device Switching
         }
         Else {
             switching := !switching
             Menu, Tray, Rename, Disable Device Switching, Enable Device Switching
-            Menu, Tray, Icon, DeviceSwitchingDisabled.ico
+            Menu, Tray, Icon, resources\DeviceSwitchingDisabled.ico
             sleepDelay := 600000
         }
     }
@@ -101,7 +127,7 @@ ChangeSwitching:
         If (overtime) {
             timeOverride := True
         }
-        Menu, Tray, Icon, DisplaySwitchLeft.ico
+        Menu, Tray, Icon, resources\DisplaySwitchLeft.ico
         Menu, Tray, Rename, Enable Device Switching, Device Switching Right
         sleepDelay := 50
         Goto DeviceSwitchingLoop

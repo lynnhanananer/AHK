@@ -29,7 +29,33 @@ Menu, Tray, Standard
 Menu, Tray, Icon, shell32.dll, 244
 
 If (A_IsCompiled) {
+    ; installs the neccesary library to the libraries directory when the exe is first run
+    if !FileExist("\libraries") {
+        FileCreateDir, libraries
+    }
+    FileInstall, ..\..\libraries\AHKHID-master\examples\AHKHID.ahk, libraries\AHKHID.ahk, 1
+
+    ; installs the neccesary icon to the resources directory when the exe is first run
+    if !FileExist("\resouces") {
+        FileCreateDir, resources
+    }
+    FileInstall, resources\shell32dll-244-x.ico, resources\shell32dll-244-x.ico, 1
+    
+    ; validate that the tray icon and library are present in the resources and libraries directory
+    if !FileExist("resources\shell32dll-244-x.ico")  && !FileExist("libraries\AHKHID.ahk") {
+        MsgBox The tray icon or required library cannot be found in the resources directory. The script will now close.
+    }
+
     Menu, Tray, Tip, Logitech HID Codes
+}
+Else {
+    ; validate that the tray icon and library are present in the resources and libraries directory
+    if !FileExist("resources\shell32dll-244-x.ico")  && !FileExist("..\..\libraries\AHKHID-master\examples\AHKHID.ahk") {
+        MsgBox The tray icon or required library cannot be found in the resources directory. The script will now close.
+    }
+
+    ; the path for the library is different when run as an executable
+    #Include, ..\..\libraries\AHKHID-master\examples\AHKHID.ahk
 }
 
 prevValue := ""
@@ -40,7 +66,7 @@ showScrollLock := True
 showFunctionMedia := True
 showTooltips := True
 
-#Include, AHKHID-master\examples\AHKHID.ahk
+
 
 ;Create GUI to receive messages
 Gui, +LastFound
