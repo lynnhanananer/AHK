@@ -46,7 +46,7 @@ If (A_IsCompiled) {
         MsgBox The tray icon or required library cannot be found in the resources directory. The script will now close.
     }
 
-    Menu, Tray, Tip, Logitech HID Codes
+    Menu, Tray, Tip, Logitech Tooltips
 }
 Else {
     ; validate that the tray icon and library are present in the resources and libraries directory
@@ -65,8 +65,6 @@ showNumLock := True
 showScrollLock := True
 showFunctionMedia := True
 showTooltips := True
-
-
 
 ;Create GUI to receive messages
 Gui, +LastFound
@@ -197,7 +195,7 @@ ShowFunctionMedia:
 ShowTooltips:
     if (showTooltips) {
         Menu, Tray, Rename, Hide Tooltips, Show Tooltips
-        Menu, Tray, Icon, shell32dll-244-x.ico
+        Menu, Tray, Icon, resources\shell32dll-244-x.ico
     }
     else {
         Menu, Tray, Rename, Show Tooltips, Hide Tooltips
