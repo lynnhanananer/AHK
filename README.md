@@ -6,7 +6,7 @@ This repository contains a collection of my personal projects that I have create
 
 Each project in this repository has its own folder and is well-documented with comments explaining how the code works. Feel free to browse through the projects and use them as inspiration for your own projects.
 
-If you're looking for pre-compiled executables, you can check out the [releases page](https://github.com/your-username/your-repo/releases) to download them.
+If you're looking for pre-compiled executables, you can check out the [releases page](https://github.com/lynnhanananer/AHK/releases/) to download them.
 
 To contribue, you'll need to have **AutoHotKey v1.1** installed on your computer. You can download v1.1 for free from the [official AutoHotKey website](https://www.autohotkey.com/download/).
 
