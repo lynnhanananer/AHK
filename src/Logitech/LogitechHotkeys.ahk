@@ -169,7 +169,7 @@ Return
 Hotkeys(ByRef Hotkeys)
 {
     ; Read in the current file and replace any breaking characters
-    FileRead, Script, C:\Users\Lyle Hanner\Desktop\Coding and Scripts\AHK\LogitechHotkeys.ahk
+    FileRead, Script, C:\Users\Lyle Hanner\Desktop\Coding and Scripts\AHK\src\Logitech\LogitechHotkeys.ahk
     Script := RegExReplace(Script, "ms`a)^\s*/\*.*?^\s*\*/\s*|^\s*\(.*?^\s*\)\s*")
 
     ; Variables for storing the hotkey information
