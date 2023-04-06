@@ -1,10 +1,8 @@
 #SingleInstance, Force
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
-
-#MaxHotkeysPerInterval, 1
-#HotkeyInterval 1800
-
+Thread, Interrupt, 1550, 2000
+Thread, NoTimers, True
 
 If (not(A_IsAdmin)) {
     MsgBox, 5,, This script needs to be run as administrator to work with Genshin Impact. Press "Retry" to restart the program and attempt to run as administrator or "Cancel" to close the program.
@@ -16,15 +14,13 @@ If (not(A_IsAdmin)) {
 }
 
 XButton1::
-    Critical
-    Tooltip
     Click
-    Sleep 300
+    Sleep 350
     Click
-    Sleep 200
     Click, Down Left
-    Sleep 500
-    Click, Up Left
-    Sleep 100
+    Sleep 600
     SendInput {Space}
+    Click, Up Left
 Return
+
+f5::ExitApp

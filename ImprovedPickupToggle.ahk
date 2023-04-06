@@ -54,28 +54,38 @@ Return
 
 PickupToggle:
     ; get's assigned as a hotkey to toggle autopickup
-    If (toggle) {
-        Tooltip % "Pickup OFF"
-        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
-        Sleep 1000
-        toggle := !toggle  ;toggle on off
-        Reload
-    }
-    Else {
+    
+    ; Gets the pointer details to prevent the key from being sent in if there is a pointer/cursor
+    PtrStructSize := A_PtrSize + 16
+    VarSetCapacity(InfoStruct, PtrStructSize)
+    NumPut(PtrStructSize, InfoStruct)
+    DllCall("GetCursorInfo", UInt, &InfoStruct)
+    Result := NumGet(InfoStruct, 8)
+
+    If (Result == 0 && !toggle) {
         toggle := !toggle  ;toggle on off
         Tooltip % "Pickup ON"
         SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
         gosub ToggleLoop
     }
 
+    If (toggle) {
+        toggle := !toggle  ;toggle on off
+        Tooltip % "Pickup OFF"
+        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
+        ; Sleep 1000
+        ; Reload
+    }
 Return
 
 PickupPress:
     ; fires the pickup key when hotkey is held
     While GetKeyState(StrReplace(A_ThisHotkey, "~", ""), "P") {
         If WinActive("Genshin Impact") {
-            SendInput, {%pickupKey% down}
-            SendInput, {%pickupKey% up}
+            ControlSend, ahk_parent, {%pickupKey% down}, Genshin Impact
+            ControlSend, ahk_parent, {%pickupKey% up}, Genshin Impact
+            ; SendInput, {%pickupKey% down}
+            ; SendInput, {%pickupKey% up}
             Sleep 1000/pressFreq
         }
     }
@@ -84,9 +94,22 @@ Return
 ToggleLoop:
     ; loops on another thread until user presses toggle key
     Loop {
+        If (!toggle) {
+            break
+        }
         If WinActive("Genshin Impact") {
-            SendInput, %pickupKey%
-            Sleep 1000/pressFreq
+            ; Gets the pointer details to prevent the key from being sent in if there is a pointer/cursor
+            PtrStructSize := A_PtrSize + 16
+            VarSetCapacity(InfoStruct, PtrStructSize)
+            NumPut(PtrStructSize, InfoStruct)
+            DllCall("GetCursorInfo", UInt, &InfoStruct)
+            Result := NumGet(InfoStruct, 8)
+
+            If (Result <> 0) {
+                ControlSend, ahk_parent, %pickupKey%, Genshin Impact
+                ; SendInput, %pickupKey%
+                Sleep 1000/pressFreq
+            }
         }
     }
 Return
