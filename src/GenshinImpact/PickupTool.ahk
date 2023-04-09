@@ -115,11 +115,10 @@ ToggleLoop:
             NumPut(PtrStructSize, InfoStruct)
             DllCall("GetCursorInfo", UInt, &InfoStruct)
             Result := NumGet(InfoStruct, 8)
-            Tooltip %Result%
 
             If (Result == 0) {
                 ControlSend, ahk_parent, %pickupKey%, Genshin Impact
-                SendInput, %pickupKey%
+                ; SendInput, %pickupKey%
                 Sleep 1000/pressFreq
             }
         }
