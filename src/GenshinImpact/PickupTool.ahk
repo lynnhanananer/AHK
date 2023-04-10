@@ -202,7 +202,6 @@ SubmitClose:
 
     IniWrite, %PickupKey%, resources\hotkeyconfig.ini, hotkeys, PickupKey
 
-    ; verifies that the 
     If (ToggleHotkey = "") {
         If (AltToggleHotkey != "") {
             IniWrite, %AltToggleHotkey%, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
@@ -255,6 +254,7 @@ ToolTipOff:
 Return
 
 DisableHotkeys:
+    ; disables the hotkeys
     IniRead, tempToggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
     IniRead, tempPressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
     Hotkey, IfWinACtive, ahk_exe GenshinImpact.exe
@@ -263,6 +263,7 @@ DisableHotkeys:
 Return
 
 EnableHotkeys:
+    ; enables the hotkeys
     IniRead, tempToggleHotkey, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
     IniRead, tempPressHotkey, resources\hotkeyconfig.ini, hotkeys, PressHotkey
     Hotkey, IfWinACtive, ahk_exe GenshinImpact.exe
