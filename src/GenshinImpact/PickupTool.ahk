@@ -4,8 +4,9 @@ SendMode Input
 SetWorkingDir, %A_ScriptDir%
 
 toggle := false
+dialogSkip := false
 
-; installs the neccesary icon for the script when the exe is first run
+; installs the necessary icon for the script when the exe is first run
 if !FileExist("\resources") {
     FileCreateDir, resources
 }
@@ -63,6 +64,26 @@ Else {
 }
 Return
 
+PickupToggle:
+    ; get's assigned as a hotkey to toggle pickup    
+    If (dialogSkip) {
+        dialogSkip := !dialogSkip
+        Tooltip % "Dialog Skip OFF"
+        SetTimer,TooltipOff,1000 ;set a timer for 1 second to clear the tooltip
+    }
+    else If (toggle) {
+        toggle := !toggle  ;toggle on off
+        Tooltip % "Pickup OFF"
+        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
+    }
+    else If (NoCursorDetected() && !toggle) { ; prevents the key from being sent in if there is a pointer/cursor
+        toggle := !toggle  ;toggle on off
+        Tooltip % "Pickup ON"
+        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
+        gosub ToggleLoop
+    }
+Return
+
 ; Gets the pointer details and returns true if no cursor is present, and false if one is present
 NoCursorDetected() {
     PtrStructSize := A_PtrSize + 16
@@ -74,35 +95,33 @@ NoCursorDetected() {
     return Result == 0
 }
 
-PickupToggle:
-    ; get's assigned as a hotkey to toggle autopickup
-    
-    ; prevents the key from being sent in if there is a pointer/cursor
-    If (NoCursorDetected() && !toggle) {
-        toggle := !toggle  ;toggle on off
-        Tooltip % "Pickup ON"
-        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
-        gosub ToggleLoop
-    }
-
-    If (toggle) {
-        toggle := !toggle  ;toggle on off
-        Tooltip % "Pickup OFF"
-        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
-        ; Sleep 1000
-        ; Reload
-    }
-Return
-
 PickupPress:
-    ; fires the pickup key when hotkey is held
-    While GetKeyState(StrReplace(A_ThisHotkey, "~", ""), "P") {
-        If WinActive("Genshin Impact") {
-            ControlSend, ahk_parent, {%pickupKey% down}, Genshin Impact
-            ControlSend, ahk_parent, {%pickupKey% up}, Genshin Impact
-            ; SendInput, {%pickupKey% down}
-            ; SendInput, {%pickupKey% up}
-            Sleep 1000/pressFreq
+    if (A_PriorHotkey == pressHotkey && A_TimeSincePriorHotkey < 250 && !NoCursorDetected())
+    {
+        ; fires the pickup key and clicks when the hotkey is double pressed
+        Tooltip % "Dialog Skip ON"
+        SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
+        dialogSkip := true
+        
+        ; stops pressing the pickup key when there is no cursor present
+        While (!NoCursorDetected() && dialogSkip) {
+            If WinActive("Genshin Impact") {
+                ControlSend, ahk_parent, {%pickupKey% down}, Genshin Impact
+                ControlSend, ahk_parent, {%pickupKey% up}, Genshin Impact
+                ControlClick,, Genshin Impact,,,, NA
+                Sleep 1000/pressFreq
+            }
+        }
+    }
+    else
+    {
+        ; fires the pickup key when hotkey is held
+        While GetKeyState(StrReplace(A_ThisHotkey, "~", ""), "P") {
+            If WinActive("Genshin Impact") {
+                ControlSend, ahk_parent, {%pickupKey% down}, Genshin Impact
+                ControlSend, ahk_parent, {%pickupKey% up}, Genshin Impact
+                Sleep 1000/pressFreq
+            }
         }
     }
 Return
@@ -123,7 +142,6 @@ ToggleLoop:
 
             If (Result == 0) {
                 ControlSend, ahk_parent, %pickupKey%, Genshin Impact
-                ; SendInput, %pickupKey%
                 Sleep 1000/pressFreq
             }
         }
@@ -173,15 +191,18 @@ PressItemSelected:
     GuiControl,, PressHotkey, AltPressHotkey
     Return
 
+; saves the users settings and re-enable the hotkeys
 SubmitClose:
     ; handles when the OK button is pressed in the gui
     Gui, Submit, NoHide
     Gui, Destroy
 
+    ; disables the active hotkeys for reassignment
     gosub DisableHotkeys
 
     IniWrite, %PickupKey%, resources\hotkeyconfig.ini, hotkeys, PickupKey
 
+    ; verifies that the 
     If (ToggleHotkey = "") {
         If (AltToggleHotkey != "") {
             IniWrite, %AltToggleHotkey%, resources\hotkeyconfig.ini, hotkeys, ToggleHotkey
