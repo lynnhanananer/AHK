@@ -63,17 +63,22 @@ Else {
 }
 Return
 
-PickupToggle:
-    ; get's assigned as a hotkey to toggle autopickup
-    
-    ; Gets the pointer details to prevent the key from being sent in if there is a pointer/cursor
+; Gets the pointer details and returns true if no cursor is present, and false if one is present
+NoCursorDetected() {
     PtrStructSize := A_PtrSize + 16
     VarSetCapacity(InfoStruct, PtrStructSize)
     NumPut(PtrStructSize, InfoStruct)
     DllCall("GetCursorInfo", UInt, &InfoStruct)
     Result := NumGet(InfoStruct, 8)
 
-    If (Result == 0 && !toggle) {
+    return Result == 0
+}
+
+PickupToggle:
+    ; get's assigned as a hotkey to toggle autopickup
+    
+    ; prevents the key from being sent in if there is a pointer/cursor
+    If (NoCursorDetected() && !toggle) {
         toggle := !toggle  ;toggle on off
         Tooltip % "Pickup ON"
         SetTimer,ToolTipOff,1000 ;set a timer for 1 second to clear the tooltip
