@@ -271,5 +271,5 @@ EnableHotkeys:
     Hotkey, %tempPressHotkey%, PickupPress, on
 Return
 
-F1::ExitApp
-!+L::WinMove, A,, -2, -26
+F1::Reload
+!+L::WinMove, A,, 0, 0
