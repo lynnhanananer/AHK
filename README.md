@@ -22,4 +22,4 @@ Thank you for visiting my repository, and happy scripting!
 Press and hold the interact key to quickly pick up nearby resources or skip through dialog.
 
 ### Intelligent Dialog Skip
-Double press the interact key during dialog to quickly skip through dialog using the lmb and interact key. This will also select dialog options when your cursor is positioned over a dialog option.
+Double press the interact key during dialog to quickly skip through dialog using the lmb and interact key. This will also select dialog options when your cursor is positioned over a dialog option. This feature will detect if your cursor is present to begin skipping dialog, and suspend pressing keys once the dialog ends/cursor is not present.
