@@ -15,3 +15,11 @@ Please make sure you're using AutoHotkey v1.1 to avoid any compatibility issues 
 If you have any questions, comments, or suggestions for improvement, please don't hesitate to open an issue or pull request. I'm always looking for ways to improve my code and make it more useful for others.
 
 Thank you for visiting my repository, and happy scripting!
+
+## Genshin Pickup Tool
+
+### Turbo Pickup Mode
+Press and hold the interact key to quickly pick up nearby resources or skip through dialog.
+
+### Intelligent Dialog Skip
+Double press the interact key during dialog to quickly skip through dialog using the lmb and interact key. This will also select dialog options when your cursor is positioned over a dialog option.
