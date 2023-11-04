@@ -19,7 +19,14 @@ Thank you for visiting my repository, and happy scripting!
 ## Genshin Pickup Tool
 
 ### Turbo Pickup Mode
-Press and hold the interact key (F) to quickly pick up nearby resources or skip through dialog.
+Press and hold the interact key (F) to quickly repeat the interact key (F) to pick up nearby resources or skip through dialog.
+
+### Turbo Pickup Toggle
+Press the Ctrl key to enable and disable the turbo pickup toggle. This quickly repeats the interact key (F) and is great for picking up nearby resources without needing to physically press the interact key (F). You cannot enable the Turbo Pickup Toggle while the cursor is present and it will be automatically be disabled when a cursor is present to prevent getting trapped in dialog or other interactions.
 
 ### Intelligent Dialog Skip
 Double press the interact key (F) during dialog to quickly skip through dialog using the left mouse button (LMB) and interact key. This will also select dialog options when your cursor is positioned over a dialog option. This feature will detect if your cursor is present to begin skipping dialog, and suspend pressing keys once the dialog ends/cursor is not present.
+Dialog skipping can be cancelled by pressing the Turbo Pickup Toggle key (Ctrl).
+
+### Re-mapping Hotkeys
+Double click on the Genshin Pickup Tool item in the Windows application tray to change the default hotkeys and keybinds. These hotkeys and keybinds will be stored in a file called hotkeyconfig.ini.
