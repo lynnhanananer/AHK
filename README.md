@@ -30,3 +30,6 @@ Dialog skipping can be cancelled by pressing the Turbo Pickup Toggle key (Ctrl).
 
 ### Re-mapping Hotkeys
 Double click on the Genshin Pickup Tool item in the Windows application tray to change the default hotkeys and keybinds. These hotkeys and keybinds will be stored in a file called hotkeyconfig.ini.
+
+### Restarting the Application
+Press the F1 key to restart the application. Multi-threading is hard, sometimes the application will get in unsual states.
