@@ -19,7 +19,7 @@ Thank you for visiting my repository, and happy scripting!
 ## Genshin Pickup Tool
 
 ### Turbo Pickup Mode
-Press and hold the interact key (F) to quickly repeat the interact key (F) to pick up nearby resources or skip through dialog.
+Press and hold the interact key (F) to quickly repeat the interact key to pick up nearby resources or skip through dialog.
 
 ### Turbo Pickup Toggle
 Press the Ctrl key to enable and disable the turbo pickup toggle. This quickly repeats the interact key (F) and is great for picking up nearby resources without needing to physically press the interact key (F). You cannot enable the Turbo Pickup Toggle while the cursor is present and it will be automatically be disabled when a cursor is present to prevent getting trapped in dialog or other interactions.
